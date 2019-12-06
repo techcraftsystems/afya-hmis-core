@@ -1,5 +1,7 @@
 ﻿using System;
-namespace AfyaHMIS.Models
+using AfyaHMIS.Models.Persons;
+
+namespace AfyaHMIS.Models.Patients
 {
     public class Patient
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace AfyaHMIS.Models
+namespace AfyaHMIS.Models.Persons
 {
     public class PersonAddress
     {

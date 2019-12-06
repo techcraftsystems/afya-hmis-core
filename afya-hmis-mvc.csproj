@@ -21,6 +21,8 @@
     <Folder Include="Extensions\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Registration\" />
+    <Folder Include="Models\Patients\" />
+    <Folder Include="Models\Persons\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\js\scripts\form-elements.min.js" />

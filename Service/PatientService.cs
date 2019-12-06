@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using AfyaHMIS.Extensions;
 using AfyaHMIS.Models;
+using AfyaHMIS.Models.Patients;
+using AfyaHMIS.Models.Persons;
 
 namespace AfyaHMIS.Service
 {

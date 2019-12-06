@@ -1,5 +1,5 @@
 ﻿using System;
-namespace AfyaHMIS.Models
+namespace AfyaHMIS.Models.Patients
 {
     public class PatientIdentifier {
         public long Id { get; set; }
