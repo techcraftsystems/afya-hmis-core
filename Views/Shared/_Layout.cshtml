@@ -1,0 +1,131 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>@ViewData["Title"]</title>
+
+    <link rel="apple-touch-icon" href="~/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="~/vendors/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="~/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="~/css/materialize.style.css">
+     <link rel="stylesheet" type="text/css" href="~/css/themes/modern-menu/materialize.css">
+    <link rel="stylesheet" type="text/css" href="~/css/themes/modern-menu/style.css">
+    <link rel="newest stylesheet" type="text/css" href="~/css/materialize.custom.css">
+</head>
+<body id="doc-body" class="vertical-layout menu-collapse vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns" data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
+    <!-- BEGIN: Header-->
+    <header class="page-topbar" id="header">
+        <div class="navbar navbar-fixed">
+            <nav class="navbar-main navbar-color nav-collapsible sideNav-lock navbar-dark gradient-45deg-indigo-blue no-shadow nav-collapsed">
+                <div class="nav-wrapper">
+                    <a class="header-search-wrapper hide-on-med-and-down pointer" style="margin-top:5px; height:54px;" href="/">
+                        <img src="~/images/logo/afya-hmis.png" alt="Call Center" style="height:100%" />
+                    </a>
+
+                    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated){
+                        <script>
+                            var isadmin = '@(HttpContextAccessor.HttpContext.User.IsInRole("Administrator").ToString().ToLower())';
+                        </script>
+
+                        <ul class="navbar-list right">
+                            <li class="hide-on-med-and-down"><a class="waves-effect waves-block waves-light toggle-fullscreen" href="javascript:void(0);"><i class="material-icons">settings_overscan</i></a></li>
+                            <li class="hide-on-large-only"><a class="waves-effect waves-block waves-light search-button" href="javascript:void(0);"><i class="material-icons">search</i></a></li>
+                            <li><a class="waves-effect waves-block waves-light notification-button" href="javascript:void(0);" data-target="notifications-dropdown"><i class="material-icons">notifications_none<small class="notification-badge">5</small></i></a></li>
+                            <li><a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);" data-target="profile-dropdown"><span class="avatar-status avatar-online"><img src="~/images/avatar/avatar-7.png" alt="avatar"><i></i></span></a></li>
+                            <li><a class="waves-effect waves-block waves-light sidenav-trigger" href="#" data-target="slide-out-right"><i class="material-icons">format_indent_increase</i></a></li>
+                        </ul>
+
+                        <!-- notifications-dropdown-->
+                        <ul class="dropdown-content" id="notifications-dropdown">
+                            <li>
+                                <h6>NOTIFICATIONS<span class="new badge">5</span></h6>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a class="grey-text text-darken-2" href="#!"><span class="material-icons icon-bg-circle cyan small">add_shopping_cart</span> A new order has been placed!</a>
+                                <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time>
+                            </li>
+                            <li>
+                                <a class="grey-text text-darken-2" href="#!"><span class="material-icons icon-bg-circle red small">stars</span> Completed the task</a>
+                                <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">3 days ago</time>
+                            </li>
+                            <li>
+                                <a class="grey-text text-darken-2" href="#!"><span class="material-icons icon-bg-circle teal small">settings</span> Settings updated</a>
+                                <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">4 days ago</time>
+                            </li>
+                            <li>
+                                <a class="grey-text text-darken-2" href="#!"><span class="material-icons icon-bg-circle deep-orange small">today</span> Director meeting started</a>
+                                <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">6 days ago</time>
+                            </li>
+                            <li>
+                                <a class="grey-text text-darken-2" href="#!"><span class="material-icons icon-bg-circle amber small">trending_up</span> Generate monthly report</a>
+                                <time class="media-meta" datetime="2015-06-12T20:50:48+08:00">1 week ago</time>
+                            </li>
+                        </ul>
+
+                        <!-- profile-dropdown-->
+                        <ul class="dropdown-content" id="profile-dropdown" style="min-width:200px;">
+                            <li><a class="grey-text text-darken-1" href="/accounts/users/@(HttpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Sid).Value)"><i class="material-icons">person_outline</i> @HttpContextAccessor.HttpContext.User.Identity.Name</a></li>
+                            <li><a class="grey-text text-darken-1" href="/accounts/chats"><i class="material-icons">chat_bubble_outline</i> View Chats</a></li>
+                            <li><a class="grey-text text-darken-1" href="/system/help/faqs"><i class="material-icons">help_outline</i> System Help</a></li>
+                            <li class="divider"></li>
+                            <li><a asp-area="" asp-controller="Account" asp-action="Logout" class="grey-text text-darken-1"><i class="material-icons">keyboard_tab</i> Logout</a></li>
+                        </ul>
+                    }
+                    else {
+                        <a class="hide-on-large-only">
+                            <img src="~/images/logo/kictb-callcenter.png" alt="Call Center" style="height:90%; padding:5px 0px 0 10px;" />
+                        </a>
+
+                        <ul class="navbar-list right">
+                            <li class="hide-on-med-and-down"><a class="waves-effect waves-block waves-light toggle-fullscreen" href="javascript:void(0);"><i class="material-icons">settings_overscan</i></a></li>
+                            <li><a class="waves-effect waves-block waves-light sidenav-trigger" href="#" data-target="slide-out-right"><i class="material-icons">format_indent_increase</i></a></li>
+                        </ul>
+                    }
+                </div>
+                <nav class="display-none search-sm">
+                    <div class="nav-wrapper">
+                        <form>
+                            <div class="input-field">
+                                <input class="search-box-sm" type="search" required="">
+                                <label class="label-icon" for="search"><i class="material-icons search-sm-icon">search</i></label><i class="material-icons search-sm-close">close</i>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+            </nav>
+        </div>
+    </header>
+    <!-- END: Header-->
+    
+    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated){
+        <partial name="_NavSideBarLeft" />
+    }
+
+    <script src="~/js/vendors.min.js"></script>
+    <script src="~/js/plugins.js"></script>
+    <script src="~/js/search.js"></script>
+    <script src="~/js/materialize.custom.js"></script>
+
+    <div id="main" class="main-full">
+        <div class="row">
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="footer-copyright">
+            <div class="container"><span>&copy; 2015 &mdash; @DateTime.Now.Year <a class="red-text" href="http://medifortehospital.com/" target="_blank">Mediforte Hospital</a>. All rights reserved.</span><span class="right hide-on-small-only">Design and Developed by <a href="http://www.techcraftsystems.net/">Techcraft Systems</a></span></div>
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

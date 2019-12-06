@@ -1,0 +1,173 @@
+/* Timeline Page*/
+.timeline {
+  position: relative;
+}
+
+.timeline:before {
+  /* Timeline center line */
+  top: 35px;
+  position: absolute;
+  content: " ";
+  width: 3px;
+  background-color: #eeeeee;
+  left: 50%;
+  height: 100%;
+  z-index: -1;
+}
+
+.timeline > li {
+  /* timeline all list*/
+  margin-bottom: 35px;
+  position: relative;
+  width: 50%;
+  float: left;
+  clear: left;
+}
+
+.timeline > li .timeline-panel {
+  /* Time line panel */
+  width: calc(100% - 43px);
+  position: relative;
+}
+
+.timeline > li .timeline-panel::before {
+  /* Triangle arrow for timeline panel*/
+  position: absolute;
+  top: 26px;
+  right: -15px;
+  display: inline-block;
+  border-top: 15px solid transparent;
+  border-left: 15px solid #ccc;
+  border-right: 0 solid #ccc;
+  border-bottom: 15px solid transparent;
+  content: " ";
+}
+
+.timeline > li .timeline-panel::after {
+  /* Triangle arrow for timeline panel*/
+  position: absolute;
+  top: 27px;
+  right: -14px;
+  display: inline-block;
+  border-top: 14px solid transparent;
+  border-left: 14px solid #fff;
+  border-right: 0 solid #fff;
+  border-bottom: 14px solid transparent;
+  content: " ";
+}
+
+.timeline > li .timeline-badge {
+  /* Center icons icons container */
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  position: absolute;
+  top: 27px;
+  right: -19px;
+  z-index: 100;
+  border-radius: 50%;
+}
+
+.timeline > li .timeline-badge a i {
+  /*Icons inside Badges */
+  font-size: 1.4rem;
+  line-height: 35px;
+}
+
+.timeline > li.timeline-inverted {
+  /* Right side timline list*/
+  float: right;
+  clear: right;
+  margin-top: 60px;
+  margin-bottom: 50px;
+}
+
+.timeline > li.timeline-inverted .timeline-panel {
+  float: right;
+}
+
+.timeline > li.timeline-inverted .timeline-panel::before {
+  border-left-width: 0;
+  border-right-width: 15px;
+  left: -15px;
+  right: auto;
+}
+
+.timeline > li.timeline-inverted .timeline-panel::after {
+  border-left-width: 0;
+  border-right-width: 14px;
+  left: -14px;
+  right: auto;
+}
+
+.timeline > li.timeline-inverted .timeline-badge {
+  left: -15px;
+}
+
+.timeline > li .card .card-header {
+  /* Card header inside card */
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.timeline > li .card .card-text .flow-text {
+  font-size: 1.4rem;
+}
+
+.timeline > li .card .horizontal-avatar li {
+  /* Specific list inside card*/
+  display: inline-block;
+  margin-right: .9rem;
+}
+
+@media (max-width: 767px) {
+  /* media query for small screen  */
+  .timeline::before {
+    /* Center line*/
+    left: 44px;
+  }
+  .timeline > li {
+    /* All list inside timeline*/
+    margin-bottom: 20px;
+    position: relative;
+    width: 100%;
+    float: left;
+    clear: left;
+  }
+  .timeline > li .timeline-panel {
+    width: calc(100% - 90px);
+    float: right;
+  }
+  .timeline > li .timeline-panel::before {
+    border-left-width: 0;
+    border-right-width: 15px;
+    left: -15px;
+    right: auto;
+  }
+  .timeline > li .timeline-panel::after {
+    border-left-width: 0;
+    border-right-width: 14px;
+    left: -14px;
+    right: auto;
+  }
+  .timeline > li .timeline-badge {
+    left: 28px;
+    margin-left: 0;
+    top: 22px;
+  }
+  .timeline > li.timeline-inverted {
+    float: left;
+    clear: left;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .timeline > li.timeline-inverted .timeline-badge {
+    left: 28px;
+  }
+}

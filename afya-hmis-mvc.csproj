@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>AfyaHMIS</RootNamespace>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModel\" />
+    <Folder Include="Service\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="Views\Registration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\js\scripts\form-elements.min.js" />
+    <Content Remove="wwwroot\js\scripts\extra-components-treeview.js" />
+    <Content Remove="wwwroot\js\scripts\css-grid.js" />
+    <Content Remove="wwwroot\js\scripts\cards-extended.js" />
+    <Content Remove="wwwroot\js\scripts\eCommerce-products-page.min.js" />
+    <Content Remove="wwwroot\js\scripts\fullscreen-slider.min.js" />
+    <Content Remove="wwwroot\js\scripts\charts-chartjs.min.js" />
+    <Content Remove="wwwroot\js\scripts\form-wizard.min.js" />
+    <Content Remove="wwwroot\js\scripts\dashboard-ecommerce.js" />
+    <Content Remove="wwwroot\js\scripts\charts-sparklines.min.js" />
+    <Content Remove="wwwroot\images\avatar\avatar-12.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-13.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-11.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-2.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-10.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-3.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-7.png" />
+    <Content Remove="wwwroot\images\avatar\avatar-15.png" />
+    <Content Remove="wwwroot\css\pages\error.min.css" />
+    <Content Remove="wwwroot\css\pages\page-timeline.css" />
+  </ItemGroup>
+</Project>

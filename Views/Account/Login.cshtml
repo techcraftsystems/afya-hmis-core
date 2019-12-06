@@ -1,0 +1,82 @@
+﻿@model AfyaHMIS.ViewModel.LoginModel;
+
+@{
+    ViewData["Title"] = "Login";
+    var errors = ViewData.ModelState.Where(n => n.Value.Errors.Count > 0).ToList();
+}
+
+<script>
+    var message = '@Model.Message';
+    var change = @Model.ToChange;
+    document.getElementById("doc-body").classList.add("login-bg");
+</script>
+<script src="~/js/accounts-login-script.js"></script>
+
+<style>
+    div.error {
+        padding-left: 40px;
+        font-size: 0.8em;
+    }
+</style>
+
+<div class="col s12">
+    <div class="container">
+        <div id="login-page" class="row">
+            <div>
+                <div class="col m7 l8 hide-on-small-only">
+                    <img src="~/images/login/2.png" class="border-radius-6 bg-opacity-8" style="margin-top:20px; width:100%" />
+                </div>
+
+                <div class="col s12 m5 l3 z-depth-4 card-panel border-radius-6 login-card bg-opacity-8">
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post)) {
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <h5 class="ml-4">Sign in</h5>
+                            </div>
+                        </div>
+                        <div class="row margin">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix pt-2">person_outline</i>
+                                @Html.TextBoxFor(model => model.User.Username)
+                                <label for="User_Username" class="center-align">Username</label>
+                                <div class="error red-text"></div>
+                            </div>
+                        </div>
+                        <div class="row margin">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix pt-2">lock_outline</i>
+                                @Html.PasswordFor(model => model.User.Password)
+                                <label for="User_Password">Password</label>
+                                <div class="error red-text"></div>
+                            </div>
+                        </div>
+                        <div class="row margin">
+                            <div class="col s12 m12 l12 ml-2 mt-1">
+                                <p>
+                                    <label>
+                                        <input type="checkbox">
+                                        <span>Remember Me</span>
+                                    </label>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <a class="btn btn-login waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">Login</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <p class="margin right-align medium-small"><a href="user-forgot-password.html">Forgot password ?</a></p>
+                            </div>
+                        </div>
+
+                        @Html.HiddenFor(model => model.ReturnUrl)
+                        @Html.HiddenFor(model => model.Password)
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

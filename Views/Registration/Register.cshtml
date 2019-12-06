@@ -1,0 +1,153 @@
+﻿@model AfyaHMIS.ViewModel.RegistrationViewModel;
+@{
+    ViewData["Title"] = "Registration";
+}
+<script src="~/vendors/formatter/jquery.formatter.min.js"></script>
+<script src="~/js/registration-register.js"></script>
+
+<script src="~/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+<script src="~/vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/vendors/data-tables/js/dataTables.select.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/vendors/data-tables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="~/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="~/vendors/data-tables/css/select.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="~/css/pages/page-users.css">
+
+<style>
+    .users-list-wrapper .users-list-filter .show-btn {
+        padding-top: 25px !important;
+    }
+    #users-list-datatable_length {
+        display: none!important;
+    }
+</style>
+
+<div class="content-wrapper-before gradient-45deg-indigo-blue"></div>
+<div class="breadcrumbs-dark pb-0 pt-2" id="breadcrumbs-wrapper">
+    <!-- Search for small screen-->
+    <div class="container">
+        <div class="row">
+            <div class="col s10 m6 l6">
+                <h5 class="breadcrumbs-title mt-0 mb-0"><span>Patient Registration</span></h5>
+                <ol class="breadcrumbs mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Registration
+                    </li>
+                </ol>
+            </div>
+            <div class="col s2 m6 l6">
+                <a class="btn dropdown-settings waves-effect waves-light breadcrumbs-btn right" href="#!" data-target="dropdown1"><i class="material-icons hide-on-med-and-up">settings</i><span class="hide-on-small-onl">Options</span><i class="material-icons right">arrow_drop_down</i></a>
+                <ul class="dropdown-content" id="dropdown1" tabindex="0">
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/new">Register New</a></li>
+                    <li class="divider" tabindex="-1"></li>
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/unknown">Register John Doe</a></li>
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/emergency">Emergency Patient</a></li>
+                    <li class="divider" tabindex="-1"></li>
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/client-codes">View Client Codes</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col s12">
+    <div class="container">
+        <section class="users-list-wrapper section">
+            <div class="users-list-filter">
+                <div class="card-panel">
+                    <div class="row">
+                        <form id="search-form">
+                            <div class="col s12 m6 l2">
+                                <div class="input-field">
+                                    <input placeholder="Full Names" id="patient-names" type="text" class="validate">
+                                    <label for="patient-names">Patient Names</label>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l2">
+                                <div class="input-field">
+                                    <input placeholder="ID/Passport/Birth Cert" id="patient-identification" type="text" class="validate">
+                                    <label for="patient-identification">ID/Passport/Other</label>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l2">
+                                <div class="input-field">
+                                    <input placeholder="Telephone/Email" id="patient-contact" type="text" class="validate">
+                                    <label for="users-list-status">Phone/Email</label>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l1">
+                                <div class="input-field">
+                                    <input placeholder="Age" id="patient-age" type="text" class="validate">
+                                    <label for="users-list-status">Age</label>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l1">
+                                <div class="input-field">
+                                    <select class="form-control" id="patient-gender">
+                                        <option value="">Any</option>
+                                        <option value="m">Male</option>
+                                        <option value="f">Female</option>
+                                        <option value="o">Others</option>
+                                    </select>
+                                    <label for="patient-gender">Gender</label>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l2">
+                                <div class="input-field">
+                                    <select class="form-control" id="patient-visit">
+                                        <option value="">Anytime</option>
+                                        <option value="1">Last Month</option>
+                                        <option value="3">Last 3 Months</option>
+                                        <option value="6">Last 6 Months</option>
+                                        <option value="12">With a Year</option>
+                                    </select>
+                                    <label for="patient-visit">Previous Visit</label>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l2 display-flex align-items-center show-btn">
+                                <a class="btn btn-block btn-search indigo waves-effect waves-light"><i class="material-icons">search</i> Search</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="users-list-table">
+                <div class="card mt-0">
+                    <div class="card-content">
+                        <!-- datatable start -->
+                        <div class="responsive-table">
+                            <table id="users-list-datatable" class="table data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>NAMES</th>
+                                        <th>AGE</th>
+                                        <th>GENDER</th>
+                                        <th>PHONE</th>
+                                        <th>LOCATION</th>
+                                        <th>LAST VISIT</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- datatable ends -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div style="bottom: 50px; right: 19px;" class="fixed-action-btn direction-top hide">
+            <a class="btn-floating btn-large gradient-45deg-light-blue-cyan gradient-shadow"><i class="material-icons">person_add</i></a>           
+        </div>
+    </div>
+</div>
