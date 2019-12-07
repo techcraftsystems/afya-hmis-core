@@ -1,4 +1,6 @@
 ﻿using System;
+using AfyaHMIS.Service;
+
 namespace AfyaHMIS.Models.Persons
 {
     public class Person
@@ -46,6 +48,14 @@ namespace AfyaHMIS.Models.Persons
             if (DateOfBirth > DateTime.Now.AddYears(-age)) age--;
 
             return age;
+        }
+
+        public Person Save(IPatientService IService) {
+            IService.SavePerson(this);
+
+            Address.Person = this;
+            Address.Save(IService);
+            return this;
         }
     }
 }

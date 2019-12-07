@@ -1,12 +1,12 @@
 ﻿jq(function() {
     var patientTable;
 
-    $('#patient-age').formatter({
+    jq('#patient-age').formatter({
         'pattern': '{{999}}',
         'persistent': true
     });
 
-    if ($("#users-list-datatable").length > 0) {
+    if (jq("#users-list-datatable").length > 0) {
         patientTable = $("#users-list-datatable").DataTable({
           responsive: true,
           'columnDefs': [{
@@ -16,6 +16,24 @@
           "displayLength": 25
         });
     };
+
+    jq('a.btn-floating.btn-large').click(function(){
+        var redirect = "?name=" + jq('#patient-names').val().trim();
+        if (jq('#patient-identification').val().trim() != ''){
+            redirect += "&id=" + jq('#patient-identification').val().trim();
+        }
+        if (jq('#patient-contact').val().trim() != ''){
+            redirect += "&phone=" + jq('#patient-contact').val().trim();
+        }
+        if (jq('#patient-age').val().trim() != ''){
+            redirect += "&age=" + jq('#patient-age').val().trim();
+        }
+        if (jq('#patient-gender').val().trim() != ''){
+            redirect += "&gender=" + jq('#patient-gender').val().trim();
+        }
+
+        window.location.href = "/registration/new" + redirect;
+    });
 
     jq('a.btn-search').click(function(){
         SearchPatients();
@@ -45,7 +63,7 @@ function SearchPatients() {
             jq.each(results, function(i, pt) {
                 var lastVisit = (pt.lastVisit == "01/01/1900" ? "Never" : pt.lastVisit);
                 var iStatus = "";
-                var iIcons = '&nbsp; <a href="/registration/edit/' + pt.uuid + '"><i class="material-icons">edit</i></a><a href="registration/revisit/' + pt.uuid + '"> <i class="material-icons">add_to_queue</i></a>';
+                var iIcons = '&nbsp; <a href="/registration/edit?=' + pt.uuid + '"><i class="material-icons">edit</i></a><a href="registration/intake?p=' + pt.uuid + '"> <i class="material-icons">add_to_queue</i></a>';
 
                 if (pt.status.id == 0){
                     iStatus = '<span class="chip amber lighten-5"><span class="amber-text">' + pt.status.name + '</span> </span>';

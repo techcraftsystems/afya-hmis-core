@@ -1,0 +1,159 @@
+﻿@model AfyaHMIS.ViewModel.RegistrationNewEditViewModel;
+@{
+    ViewData["Title"] = "New Patient";
+}
+<script src="~/vendors/formatter/jquery.formatter.min.js"></script>
+<script src="~/vendors/select2/select2.full.min.js"></script>
+<script src="~/vendors/jquery-validation/jquery.validate.min.js"></script>
+<script src="~/js/registration-new.js"></script>
+<script src="~/js/scripts/page-users.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/css/pages/page-users.css">
+<style>
+    div.error {
+        padding-left: 43px;
+    }
+</style>
+
+<div class="content-wrapper-before gradient-45deg-indigo-blue"></div>
+<div class="breadcrumbs-dark pb-0 pt-2" id="breadcrumbs-wrapper">
+    <!-- Search for small screen-->
+    <div class="container">
+        <div class="row">
+            <div class="col s10 m6 l6">
+                <h5 class="breadcrumbs-title mt-0 mb-0"><span>@ViewData["Title"]</span></h5>
+                <ol class="breadcrumbs mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/registration/">Registration</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        New
+                    </li>
+                </ol>
+            </div>
+            <div class="col s2 m6 l6">
+                <a class="btn dropdown-settings waves-effect waves-light breadcrumbs-btn right" href="#!" data-target="dropdown1"><i class="material-icons hide-on-med-and-up">settings</i><span class="hide-on-small-onl">Options</span><i class="material-icons right">arrow_drop_down</i></a>
+                <ul class="dropdown-content" id="dropdown1" tabindex="0">
+                    <li tabindex="0"><a class="grey-text text-darken-2 disabled" href="/registration/new">Register New</a></li>
+                    <li class="divider" tabindex="-1"></li>
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/unknown">Register John Doe</a></li>
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/emergency">Emergency Patient</a></li>
+                    <li class="divider" tabindex="-1"></li>
+                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/client-codes">View Client Codes</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Patient -->
+<div class="col s12">
+    <div class="container">
+        <div class="section users-edit">
+            <div class="card">
+                <div class="card-content">
+                    <h5 class="display-flex align-items-center active" style="color: #3949ab">
+                        <i class="material-icons mr-1">person_outline</i><span>Patient Details</span>
+                    </h5>
+                    <div class="divider mb-3"></div>
+
+                    <div class="row">
+                        <div class="col s12" id="account">
+                            <!-- users edit media object start -->
+                            <div class="media display-flex align-items-center mb-2">
+                                <a class="mr-2" href="#">
+                                    <img src="~/images/avatar/new-patient.png" alt="users avatar" class="z-depth-4 circle" height="64" width="64">
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="media-heading mt-0">Avatar</h5>
+                                    <div class="user-edit-btns display-flex">
+                                        <a href="#" class="btn-small indigo">Upload</a>
+                                        <a href="#" class="btn-small btn-light-pink">Reset</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @using (Html.BeginForm("RegisterNewPatient", "Registration", FormMethod.Post, new { id = "patient-form", onsubmit="return validateForm()", novalidate = "novalidate", autocomplete="off" }))
+                            {
+                                <div class="row">
+                                    <div class="input-field col s12 m6 l4">
+                                        <i class="material-icons prefix">person_pin</i>
+                                        @Html.TextBoxFor(model => model.Patient.Person.Name, new { @class = "validate" })
+                                        <label for="Patient_Person_Name">Full Names</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m6 l4">
+                                        <i class="material-icons prefix">event</i>
+                                        @Html.TextBoxFor(model => model.DateOfBirth, new { placeholder = DateTime.Now.ToString("MMM dd, yyyy"), @class = "validate birthdate-picker" })
+                                        <label for="DateOfBirth">Date of Birth</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">account_circle</i>
+                                        @Html.DropDownListFor(model => model.Patient.Person.Gender, Model.Gender)
+                                        <label>Gender</label>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">more</i>
+                                        @Html.TextBoxFor(model => model.Patient.PI.Identifier, new { @class = "validate" })
+                                        <label for="Patient_PI_Identifier">Identification</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">more_vert</i>
+                                        @Html.DropDownListFor(model => model.Patient.PI.Type.Id, Model.IdType)
+                                        <label>Identification Type</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">local_phone</i>
+                                        @Html.TextBoxFor(model => model.Patient.Person.Address.Telephone, new { @class = "validate", data_error = ".errorTxt4" })
+                                        <label for="Patient_Person_Address_Telephone">Telephone</label>
+                                        <small class="errorTxt4"></small>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">location_on</i>
+                                        @Html.TextBoxFor(model => model.Patient.Person.Address.Location, new { @class = "", data_error = "" })
+                                        <label for="Patient_Person_Address_Location">Physical Location</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">mail_outline</i>
+                                        @Html.TextBoxFor(model => model.Patient.Person.Address.Email, new { type = "email", @class = "validate", data_error = ".errorTxt5" })
+                                        <label for="Patient_Person_Address_Email">Email Address</label>
+                                        <small class="errorTxt5"></small>
+                                    </div>
+
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">playlist_add</i>
+                                        @Html.TextAreaFor(model => model.Patient.Notes, new { @class = "materialize-textarea" })
+                                        <label for="Patient_Notes">Patient Notes</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s12 display-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn indigo" name="action">
+                                            Save changes
+                                        </button>
+                                        <button type="button" class="btn btn-light">Cancel</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

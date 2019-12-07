@@ -1,4 +1,6 @@
 ﻿using System;
+using AfyaHMIS.Service;
+
 namespace AfyaHMIS.Models.Patients
 {
     public class PatientIdentifier {
@@ -20,15 +22,9 @@ namespace AfyaHMIS.Models.Patients
             AddedBy = new Users();
             Notes = "";
         }
-    }
 
-    public class PatientIdentifierType {
-        public long Id { get; set; }
-        public string Name { get; set; }
-
-        public PatientIdentifierType() {
-            Id = 0;
-            Name = "";
+        public PatientIdentifier Save(IPatientService IService) {
+            return IService.SavePatientIdentifier(this);
         }
     }
 }

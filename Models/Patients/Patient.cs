@@ -1,5 +1,6 @@
 ﻿using System;
 using AfyaHMIS.Models.Persons;
+using AfyaHMIS.Service;
 
 namespace AfyaHMIS.Models.Patients
 {
@@ -22,6 +23,7 @@ namespace AfyaHMIS.Models.Patients
             Uuid = "";
             Age = "";
             Identifier = "";
+            PI = new PatientIdentifier();
             Person = new Person();
             Status = new PatientStatus();
             AddedBy = new Users();
@@ -40,20 +42,19 @@ namespace AfyaHMIS.Models.Patients
         }
 
         public string GetUuid() {
-            //if (string.IsNullOrEmpty(Uuid))
-                //Uuid = new PatientService().GetPatientUuid(this.Id);
+            if (string.IsNullOrEmpty(Uuid))
+                Uuid = new PatientService().GetPatientUuid(this);
             return Uuid;
         }
-    }
 
-    public class PatientStatus
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
+        public Patient Save(IPatientService IService) {
+            Person.Save(IService);
+            IService.SavePatient(this);
 
-        public PatientStatus() {
-            Id = 0;
-            Name = "";
+            PI.Patient = this;
+            PI.Save(IService);
+            
+            return this;
         }
     }
 }

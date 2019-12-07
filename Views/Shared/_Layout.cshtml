@@ -1,4 +1,17 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    string controller = this.ViewContext.RouteData.Values["controller"].ToString();
+    string action = this.ViewContext.RouteData.Values["action"].ToString();
+
+    string body_class = "menu-collapse";
+    string main_class = "main-full";
+
+    if (controller.Equals("Registration") && action.Equals("New")) {
+        body_class = "";
+        main_class = "";
+    }
+
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="~/css/themes/modern-menu/style.css">
     <link rel="newest stylesheet" type="text/css" href="~/css/materialize.custom.css">
 </head>
-<body id="doc-body" class="vertical-layout menu-collapse vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns" data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
+<body id="doc-body" class="vertical-layout vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns @(body_class)" data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
     <!-- BEGIN: Header-->
     <header class="page-topbar" id="header">
         <div class="navbar navbar-fixed">
@@ -114,7 +127,7 @@
     <script src="~/js/search.js"></script>
     <script src="~/js/materialize.custom.js"></script>
 
-    <div id="main" class="main-full">
+    <div id="main" class="@(main_class)">
         <div class="row">
             @RenderBody()
         </div>

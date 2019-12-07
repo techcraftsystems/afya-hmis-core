@@ -1,4 +1,6 @@
 ﻿using System;
+using AfyaHMIS.Service;
+
 namespace AfyaHMIS.Models.Persons
 {
     public class PersonAddress
@@ -22,6 +24,10 @@ namespace AfyaHMIS.Models.Persons
             AddedOn = DateTime.Now;
             AddedBy = new Users();
             Notes = "";
+        }
+
+        public PersonAddress Save(IPatientService IService) {
+            return IService.SavePersonAddress(this);
         }
     }
 }
