@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Security.Claims;
 using AfyaHMIS.Extensions;
 using AfyaHMIS.Models;
 using AfyaHMIS.Models.Patients;
 using AfyaHMIS.Models.Persons;
-using Microsoft.AspNetCore.Http;
+using AfyaHMIS.Models.Registrations;
+using AfyaHMIS.Models.Rooms;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AfyaHMIS.Service
@@ -15,31 +15,78 @@ namespace AfyaHMIS.Service
         public List<Patient> SearchPatients(string names = "", string identifier = "", string phone = "", string age = "", string gender = "", string visit = "");
         public List<SelectListItem> GetPatientIdentificationTypes();
 
+        public Patient GetPatient(string uuid);
         public string GetPatientUuid(Patient patient);
 
         public Person SavePerson(Person person);
         public PersonAddress SavePersonAddress(PersonAddress address);
         public Patient SavePatient(Patient patient);
         public PatientIdentifier SavePatientIdentifier(PatientIdentifier identifier);
+        public Encounter CreateEncounter(Encounter Encounter);
+        public Visit SaveVisit(Visit visit);
+        public Referral SaveReferral(Referral referral);
+        public ReferralDoctors SaveReferralDoctors(ReferralDoctors referral);
+
+        public Queues SaveQueue(Queues queue);
     }
 
     public class PatientService : IPatientService {
-        private List<SelectListItem> GetIEnumerable(string query) {
-            List<SelectListItem> ienumarable = new List<SelectListItem>();
+        private readonly ICoreService ICoreService = new CoreService();
+
+        public Patient GetPatient(string uuid) {
+            Patient patient = null;
+
             SqlServerConnection conn = new SqlServerConnection();
-            SqlDataReader dr = conn.SqlServerConnect(query);
-            if (dr.HasRows)
-            {
-                while (dr.Read()) {
-                    ienumarable.Add(new SelectListItem
-                    {
-                        Value = dr[0].ToString(),
-                        Text = dr[1].ToString()
-                    });
-                }
+            SqlDataReader dr = conn.SqlServerConnect("SELECT pt_idnt, pt_uuid, pt_identifier, pt_notes, pt_added_by, pt_added_on, pt_visit, pst_idnt, pst_status, pi_idnt, pi_identifier, pi_notes, pit_idnt, pit_type, ps_idnt, ps_name, ps_gender, ps_dob, ps_estimate, ps_added_on, ps_added_by, ps_notes, pa_idnt, pa_default, pa_telephone, pa_email, pa_location, pa_added_on, pa_added_by, pa_notes FROM vPatient WHERE pt_uuid COLLATE SQL_Latin1_General_CP1_CS_AS LIKE '" + uuid + "'");
+            if (dr.Read()) {
+                patient = new Patient {
+                    Id = Convert.ToInt64(dr[0]),
+                    Uuid = dr[1].ToString(),
+                    Identifier = dr[2].ToString(),
+                    Notes = dr[3].ToString(),
+                    AddedBy = new Users { Id = Convert.ToInt64(dr[4]) },
+                    AddedOn = Convert.ToDateTime(dr[5]),
+                    LastVisit = Convert.ToDateTime(dr[6]).ToString("dd/MM/yyyy"),
+                    Status = new PatientStatus {
+                        Id = Convert.ToInt64(dr[7]),
+                        Name = dr[8].ToString()
+                    },
+                    PI = new PatientIdentifier {
+                        Id = Convert.ToInt64(dr[9]),
+                        Identifier = dr[10].ToString(),
+                        Notes = dr[11].ToString(),
+                        Type = new PatientIdentifierType
+                        {
+                            Id = Convert.ToInt64(dr[12]),
+                            Name = dr[13].ToString()
+                        }
+                    },
+                    Person = new Person {
+                        Id = Convert.ToInt64(dr[14]),
+                        Name = dr[15].ToString(),
+                        Gender = dr[16].ToString(),
+                        DateOfBirth = Convert.ToDateTime(dr[17]),
+                        Estimate = Convert.ToBoolean(dr[18]),
+                        AddedOn = Convert.ToDateTime(dr[19]),
+                        AddedBy = new Users { Id = Convert.ToInt64(dr[20]) },
+                        Notes = dr[21].ToString(),
+                        Address = new PersonAddress {
+                            Id = Convert.ToInt64(dr[22]),
+                            Default = Convert.ToBoolean(dr[23]),
+                            Telephone = dr[24].ToString(),
+                            Email = dr[25].ToString(),
+                            Location = dr[26].ToString(),
+                            AddedOn = Convert.ToDateTime(dr[27]),
+                            AddedBy = new Users { Id = Convert.ToInt64(dr[28]) },
+                            Notes = dr[29].ToString()
+                        }
+                    }
+                };
+
+                patient.GetAge();
             }
 
-            return ienumarable;
+            return patient;
         }
 
         public List<Patient> SearchPatients(string names = "", string identifier = "", string phone = "", string age = "", string gender = "", string visit = "")
@@ -130,7 +177,7 @@ namespace AfyaHMIS.Service
         }
 
         public List<SelectListItem> GetPatientIdentificationTypes() {
-            return GetIEnumerable("SELECT pit_idnt, pit_type FROM PatientIdentifierType ORDER BY pit_order, pit_idnt");
+            return ICoreService.GetIEnumerable("SELECT pit_idnt, pit_type FROM PatientIdentifierType ORDER BY pit_order, pit_idnt");
         }
 
         public string GetPatientIdentifier(Patient patient) {
@@ -177,6 +224,44 @@ namespace AfyaHMIS.Service
             pi.Id = conn.SqlServerUpdate("DECLARE @idnt INT=" + pi.Id + ", @default BIT='" + pi.Default + "', @patient INT=" + pi.Patient.Id + ", @type INT=" + pi.Type.Id + ", @identifier NVARCHAR(250)='" + pi.Identifier + "', @user INT=" + pi.AddedBy.Id + ", @notes NVARCHAR(MAX)='" + pi.Notes + "'; IF NOT EXISTS (SELECT pi_idnt FROM PatientIdentifier WHERE pi_idnt=@idnt) BEGIN INSERT INTO PatientIdentifier(pi_default, pi_patient, pi_type, pi_identifier, pi_added_by, pi_notes) output INSERTED.pi_idnt VALUES (@default, @patient, @type, @identifier, @user, @notes) END ELSE BEGIN UPDATE PatientIdentifier SET pi_default=@default, pi_type=@type, pi_identifier=@identifier, pi_notes=@notes output INSERTED.pi_idnt WHERE pi_idnt=@idnt END");
 
             return pi;
-        }        
+        }
+
+        public Encounter CreateEncounter(Encounter encounter) {
+            SqlServerConnection conn = new SqlServerConnection();
+            encounter.Id = conn.SqlServerUpdate("DECLARE @visit INT=" + encounter.Visit.Id + ", @patient INT=" + encounter.Patient.Id + ", @type INT=" + encounter.Type.Id + ", @user INT=" + encounter.CreatedBy.Id + ", @notes NVARCHAR(250)='" + encounter.Notes + "'; INSERT INTO Encounter (enc_visit, enc_patient, enc_type, enc_created_by, enc_notes) output INSERTED.enc_idnt VALUES (@visit, @patient, @type, @user, @notes)");
+
+            return encounter;
+        }
+
+        public Visit SaveVisit(Visit visit) {
+            SqlServerConnection conn = new SqlServerConnection();
+            visit.Id = conn.SqlServerUpdate("DECLARE @idnt INT=" + visit.Id + ", @patient INT=" + visit.Patient.Id + ", @type INT=" + visit.Type.Id + ", @code INT=" + visit.ClientCode.Id + ", @scheme NVARCHAR(250)='" + visit.SchemeNumber + "', @barcode NVARCHAR(250)='" + visit.Barcode + "', @medico INT=" + visit.MedicoLegal.Id + ", @user INT=" + visit.CreatedBy.Id + ", @notes NVARCHAR(MAX)='" + visit.Notes + "'; IF NOT EXISTS (SELECT vst_idnt FROM Visit WHERE vst_idnt=@idnt) BEGIN INSERT INTO Visit(vst_patient, vst_type, vst_client_code, vst_barcode, vst_scheme_no, vst_medico_legal, vst_created_by, vst_notes) output INSERTED.vst_idnt VALUES (@patient, @type, @code, @barcode, @scheme, @medico, @user, @notes) END ELSE BEGIN UPDATE Visit SET vst_type=@type, vst_client_code=@code, vst_barcode=@barcode, vst_scheme_no=@scheme, vst_medico_legal=@medico, vst_notes=@notes output INSERTED.vst_idnt WHERE vst_idnt=@idnt END");
+
+            return visit;
+        }
+
+        public Referral SaveReferral(Referral referral)
+        {
+            SqlServerConnection conn = new SqlServerConnection();
+            referral.Id = conn.SqlServerUpdate("DECLARE @idnt INT=" + referral.Id + ", @visit INT=" + referral.Visit.Id + ", @type INT=" + referral.Type.Id + ", @facility NVARCHAR(250)='" + referral.Facility + "', @user INT=" + referral.CreatedBy.Id + ", @notes NVARCHAR(MAX)='" + referral.Notes + "'; IF NOT EXISTS (SELECT rf_idnt FROM Referral WHERE rf_idnt=@idnt) BEGIN INSERT INTO Referral(rf_visit, rf_type, rf_facility, rf_created_by, rf_notes) output INSERTED.rf_idnt VALUES (@visit, @type, @facility, @user, @notes) END ELSE BEGIN UPDATE Referral SET rf_type=@type, rf_facility=@facility, rf_notes=@notes output INSERTED.rf_idnt WHERE rf_idnt=@idnt END");
+
+            return referral;
+        }
+
+        public Queues SaveQueue(Queues queue)
+        {
+            SqlServerConnection conn = new SqlServerConnection();
+            queue.Id = conn.SqlServerUpdate("DECLARE @idnt INT=" + queue.Id + ", @visit INT=" + queue.Visit. Id + ", @priority INT=" + queue.Priority.Id + ", @bill INT=" + queue.Bill.Id + ", @room INT=" + queue.Room.Id + ", @user INT=" + queue.CreatedBy.Id + ", @notes NVARCHAR(MAX)='" + queue.Notes + "'; IF NOT EXISTS (SELECT qs_idnt FROM Queues WHERE qs_idnt=@idnt) BEGIN INSERT INTO Queues (qs_visit, qs_priority, qs_bill, qs_room, qs_created_by, qs_notes) output INSERTED.qs_idnt VALUES (@visit, @priority, @bill, @room, @user, @notes) END ELSE BEGIN UPDATE Queues SET qs_priority=@priority, qs_room=@room, qs_notes=@notes output INSERTED.qs_idnt WHERE qs_idnt=@idnt END");
+
+            return queue;
+        }
+
+        public ReferralDoctors SaveReferralDoctors(ReferralDoctors refdoc)
+        {
+            SqlServerConnection conn = new SqlServerConnection();
+            refdoc.Id = conn.SqlServerUpdate("DECLARE @idnt INT=" + refdoc.Id + ", @referral INT=" + refdoc.Referral.Id + ", @doctor INT=" + refdoc.Doctor.Id + ", @notes NVARCHAR(MAX)='" + refdoc.Notes + "'; IF NOT EXISTS (SELECT rd_idnt FROM ReferralDoctor WHERE rd_idnt=@idnt) BEGIN INSERT INTO ReferralDoctor (rd_referral, rd_doctor, rd_notes) output INSERTED.rd_idnt VALUES (@referral, @doctor, @notes) END ELSE BEGIN UPDATE ReferralDoctor SET rd_doctor=@doctor, rd_notes=@notes output INSERTED.rd_idnt WHERE rd_idnt=@idnt END");
+
+            return refdoc;
+        }
     }
 }

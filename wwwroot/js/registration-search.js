@@ -63,7 +63,7 @@ function SearchPatients() {
             jq.each(results, function(i, pt) {
                 var lastVisit = (pt.lastVisit == "01/01/1900" ? "Never" : pt.lastVisit);
                 var iStatus = "";
-                var iIcons = '&nbsp; <a href="/registration/edit?=' + pt.uuid + '"><i class="material-icons">edit</i></a><a href="registration/intake?p=' + pt.uuid + '"> <i class="material-icons">add_to_queue</i></a>';
+                var iIcons = '&nbsp; <a href="/registration/edit?=' + pt.uuid + '"><i class="material-icons">edit</i></a><a href="/registration/visit?p=' + pt.uuid + '"> <i class="material-icons">add_to_queue</i></a>';
 
                 if (pt.status.id == 0){
                     iStatus = '<span class="chip amber lighten-5"><span class="amber-text">' + pt.status.name + '</span> </span>';

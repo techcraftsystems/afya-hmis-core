@@ -1,0 +1,216 @@
+﻿@model AfyaHMIS.ViewModel.RegistrationVisitViewModel;
+@{
+    ViewData["Title"] = "Patient Visit";
+}
+
+<script src="~/js/registration-visit.js"></script>
+<script src="~/vendors/select2/select2.full.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/css/pages/page-users.css">
+<link rel="stylesheet" href="~/vendors/select2/select2.min.css" type="text/css">
+<link rel="stylesheet" href="~/vendors/select2/select2-materialize.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="~/css/pages/form-select2.css">
+
+<style>
+    .select2 {
+        margin-left: 3rem;
+        width: calc(100% - 3rem)!important;
+    }
+</style>
+
+<div class="content-wrapper-before gradient-45deg-indigo-blue"></div>
+<div class="breadcrumbs-dark pb-0 pt-2" id="breadcrumbs-wrapper">
+    <!-- Search for small screen-->
+    <div class="container">
+        <div class="row">
+            <div class="col s10 m6 l6">
+                <h5 class="breadcrumbs-title mt-0 mb-0"><span>@ViewData["Title"]</span></h5>
+                <ol class="breadcrumbs mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/registration/search">Registration</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Visit
+                    </li>
+                </ol>
+            </div>
+            <div class="col s2 m6 l6">
+                <a class="btn dropdown-settings waves-effect waves-light breadcrumbs-btn right" href="#!" data-target="dropdown1"><i class="material-icons hide-on-med-and-up">settings</i><span class="hide-on-small-onl">Options</span><i class="material-icons right">arrow_drop_down</i></a>
+                <partial name="_RegistrationMenuPartial" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col s12">
+    <div class="container">
+        <!-- users view start -->
+        <div class="section users-view">
+            <div class="card-panel mb-0">
+                <div class="row">
+                    <div class="col s12 m7">
+                        <div class="display-flex media">
+                            <a href="#" class="avatar">
+                                <img src="~/images/avatar/new-patient.png" alt="users view avatar" class="z-depth-4 circle" height="64" width="64">
+                            </a>
+                            <div class="media-body">
+                                <h6 class="media-heading">
+                                    <span class="users-view-name">@(Model.Visit.Patient.Person.Name)</span>
+                                    <span class="grey-text">/</span>
+                                    <span class="users-view-username grey-text">@(Model.Visit.Patient.Person.Gender.Equals("m") ? "Male" : "Female") @(Model.Visit.Patient.GetAge())</span>
+                                </h6>
+                                <span>PATIENT ID:</span>
+                                <span class="users-view-id">@Model.Visit.Patient.Identifier</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m5 quick-action-btns display-flex justify-content-end align-items-center pt-2">
+                        <a href="" class="btn-small btn-light-indigo"><i class="material-icons">mail_outline</i></a>
+                        <a href="/registration/edit?p=@(Model.Visit.Patient.Uuid)" class="btn-small indigo">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Intake -->
+<div class="col s12">
+    <div class="container">
+        <div class="section users-edit pt-0">
+            <div class="card mt-0">
+                <div class="card-content">
+                    <h5 class="display-flex align-items-center active" style="color: #3949ab">
+                        <i class="material-icons mr-1">camera_front</i><span>Intake Details</span>
+                    </h5>
+                    <div class="divider mb-3"></div>
+
+                    <div class="row">
+                        <div class="col s12" id="account">
+                            @using (Html.BeginForm("RegisterVisit", "Registration", FormMethod.Post, new { id = "visit-form", onsubmit="return validateForm()", novalidate = "novalidate", autocomplete="off" }))
+                            {
+                                <div class="row">
+                                    <div class="input-field col s12 m6 l4">
+                                        <i class="material-icons prefix">label_outline</i>
+                                        @Html.DropDownListFor(model => model.Visit.ClientCode.Id, Model.Codes, new { @class = "select2 browser-default" })
+                                        <label>Client Code</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">assignment</i>
+                                        @Html.TextBoxFor(model => model.Visit.SchemeNumber, new { @class = "" })
+                                        <label for="Visit_SchemeNumber">Scheme Number</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">clear_all</i>
+                                        @Html.TextBoxFor(model => model.Visit.Barcode, new { @class = "" })
+                                        <label for="Visit_Barcode">Barcode</label>
+                                    </div>
+                                </div>
+
+                                <h5 class="display-flex align-items-center active mt-5" style="color: #3949ab">
+                                    <i class="material-icons mr-1">gavel</i><span>Medical Legal Case</span>
+                                </h5>                                
+                                <div class="divider mb-3"></div>
+                                <div class="row">
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">gavel</i>
+                                        @Html.DropDownListFor(model => model.Visit.MedicoLegal.Id, Model.MedicoLegal, "NOT MEDICO LEGAL", new { @class = "select2 browser-default" })
+                                        <label for="Visit_MedicoLegal_Id">Legal Case</label>
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+
+                                <h5 class="display-flex align-items-center active mt-5" style="color: #3949ab">
+                                    <i class="material-icons mr-1">transfer_within_a_station</i><span>Patient Referral</span>
+                                </h5>                                
+                                <div class="divider mb-3"></div>
+                                <div class="row">
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">swap_vert</i>
+                                        @Html.DropDownListFor(model => model.Referral.Type.Id, Model.Referrals, "NO REFERRALS", new { @class = "select2 browser-default" })
+                                        <label for="Referral_Type_Id">Referral Type</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">location_city</i>
+                                        @Html.TextBoxFor(model => model.Referral.Facility, new { @class = "" })
+                                        <label for="Referral_Facility">Facility</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">folder_shared</i>
+                                        @Html.DropDownListFor(model => model.Doctor, Model.Doctors, new { @class = "max-length browser-default", multiple = "multiple" })
+                                        <label for="Doctors">Doctors</label>
+                                    </div>
+
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">playlist_add</i>
+                                        @Html.TextAreaFor(model => model.Referral.Notes, new { @class = "materialize-textarea" })
+                                        <label for="Referral_Notes">Referral Notes</label>
+                                    </div>
+                                </div>
+
+                                <h5 class="display-flex align-items-center active mt-5" style="color: #3949ab">
+                                    <i class="material-icons mr-1">home</i><span>Room to Visit</span>
+                                </h5>                                
+                                <div class="divider mb-3"></div>
+                                <div class="row">
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">low_priority</i>
+                                        @Html.DropDownListFor(model => model.Queue.Room.Type.Id, Model.Rooms, new { @class = "" })
+                                        <label for="Queue_Room_Type_Id">Room Type</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">more_vert</i>
+                                        @Html.DropDownListFor(model => model.Queue.Room.Id, Model.Types, new { @class = "" })
+                                        <label for="Queue_Room_Id">Select Room</label>
+                                    </div>
+
+                                    <div class="input-field col s12 m3 l4">
+                                        <i class="material-icons prefix">attach_money</i>
+                                        @Html.TextBoxFor(model => model.Bill.Amount, new { @readonly = "readonly" })
+                                        <label for="Bill_Amount">Consultation Fee</label>
+                                    </div>
+
+                                    <div class="col s12 m3 l4" style="padding: 25px 0 0 57px;">
+                                        <label>
+                                            @Html.CheckBoxFor(model => model.Waiver)
+                                            <span>Waiver Consultation Fees</span>
+                                        </label>
+                                        <div style="clear:both"></div>
+                                    </div>
+
+                                    <div class="input-field col s12 m9 l8">
+                                        <i class="material-icons prefix">playlist_add</i>
+                                        @Html.TextAreaFor(model => model.WaiverReason, new { @class = "materialize-textarea validate" })
+                                        <label for="WaiverReason">Waiver Reason</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s12 display-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn indigo" name="action">
+                                            Save
+                                        </button>
+                                        <button type="button" class="btn btn-light">Cancel</button>
+                                    </div>
+                                </div>
+
+                                @Html.HiddenFor(model => Model.Visit.Patient.Id)
+                                @Html.HiddenFor(model => Model.Item.Service.Id)
+                                @Html.HiddenFor(model => Model.Item.Amount)
+                                @Html.HiddenFor(model => Model.DoctorString)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

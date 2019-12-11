@@ -6,7 +6,7 @@
     string body_class = "menu-collapse";
     string main_class = "main-full";
 
-    if (controller.Equals("Registration") && action.Equals("New")) {
+    if (controller.Equals("Registration") && (action.Equals("New") || action.Equals("Visit"))) {
         body_class = "";
         main_class = "";
     }

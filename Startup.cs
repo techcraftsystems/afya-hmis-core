@@ -44,8 +44,12 @@ namespace AfyaHMIS
             });
 
             // configure DI for application services
+            services.AddScoped<IConceptService, ConceptService>();
+            services.AddScoped<ICoreService, CoreService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IFinanceService, FinanceService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {

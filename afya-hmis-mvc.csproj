@@ -23,6 +23,11 @@
     <Folder Include="Views\Registration\" />
     <Folder Include="Models\Patients\" />
     <Folder Include="Models\Persons\" />
+    <Folder Include="Models\Registrations\" />
+    <Folder Include="Models\Concepts\" />
+    <Folder Include="Models\Rooms\" />
+    <Folder Include="Models\Finances\" />
+    <Folder Include="Models\Doctors\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\js\scripts\form-elements.min.js" />

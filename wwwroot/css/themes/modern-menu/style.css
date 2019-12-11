@@ -2415,7 +2415,7 @@ html [type="button"],
 
 /* Margin Top */
 .mt-0 {
-  margin-top: 0% !important;
+  margin-top: 0 !important;
 }
 
 .mt-1 {
@@ -2460,7 +2460,7 @@ html [type="button"],
 
 /* Margin Right */
 .mr-0 {
-  margin-right: 0% !important;
+  margin-right: 0 !important;
 }
 
 .mr-1 {
@@ -2505,7 +2505,7 @@ html [type="button"],
 
 /* Margin Left */
 .ml-0 {
-  margin-left: 0% !important;
+  margin-left: 0 !important;
 }
 
 .ml-1 {
@@ -2550,7 +2550,7 @@ html [type="button"],
 
 /* Margin Bottom */
 .mb-0 {
-  margin-bottom: 0% !important;
+  margin-bottom: 0 !important;
 }
 
 .mb-1 {

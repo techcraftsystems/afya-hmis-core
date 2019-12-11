@@ -27,7 +27,7 @@
                         <a href="/">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="/registration/">Registration</a>
+                        <a href="/registration/search">Registration</a>
                     </li>
                     <li class="breadcrumb-item active">
                         New
@@ -36,14 +36,7 @@
             </div>
             <div class="col s2 m6 l6">
                 <a class="btn dropdown-settings waves-effect waves-light breadcrumbs-btn right" href="#!" data-target="dropdown1"><i class="material-icons hide-on-med-and-up">settings</i><span class="hide-on-small-onl">Options</span><i class="material-icons right">arrow_drop_down</i></a>
-                <ul class="dropdown-content" id="dropdown1" tabindex="0">
-                    <li tabindex="0"><a class="grey-text text-darken-2 disabled" href="/registration/new">Register New</a></li>
-                    <li class="divider" tabindex="-1"></li>
-                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/unknown">Register John Doe</a></li>
-                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/emergency">Emergency Patient</a></li>
-                    <li class="divider" tabindex="-1"></li>
-                    <li tabindex="0"><a class="grey-text text-darken-2" href="/registration/client-codes">View Client Codes</a></li>
-                </ul>
+                <partial name="_RegistrationMenuPartial" />
             </div>
         </div>
     </div>
@@ -144,7 +137,7 @@
                                 <div class="row">
                                     <div class="col s12 display-flex justify-content-end mt-3">
                                         <button type="submit" class="btn indigo" name="action">
-                                            Save changes
+                                            Save
                                         </button>
                                         <button type="button" class="btn btn-light">Cancel</button>
                                     </div>
