@@ -67,6 +67,8 @@ namespace AfyaHMIS.Controllers
         [Route("/registration/edit")]
         public IActionResult Edit(string p, RegistrationNewEditViewModel model) {
             model.Patient = IPatientService.GetPatient(p);
+
+            model.IdType = IPatientService.GetPatientIdentificationTypes();
             return View(model);
         }
 
