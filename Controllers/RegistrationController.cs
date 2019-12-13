@@ -56,7 +56,7 @@ namespace AfyaHMIS.Controllers
                 model.Patient.Person.Name = gender;
             if (!string.IsNullOrEmpty(phone))
                 model.Patient.Person.Address.Telephone = phone;
-            if (!string.IsNullOrEmpty(age) && Double.TryParse(age, out double dblAge) && Double.Parse(age) > 0)
+            if (!string.IsNullOrEmpty(age) && Double.TryParse(age, out double dblAge) && double.Parse(age) > 0)
                 model.DateOfBirth = DateTime.Now.AddYears(0 - Int32.Parse(age)).ToString("dd/MM/yyyy");
 
             model.IdType = IPatientService.GetPatientIdentificationTypes();
@@ -93,8 +93,8 @@ namespace AfyaHMIS.Controllers
             return Json(ICoreService.GetRoomsIEnumerable(new RoomType { Id = type }));
         }
 
-        public ClientCodeRates GetClientCodeBillableRate(int code, int service) {
-            return IFinanceService.GetClientCodeBillableRate(new ClientCode { Id = code }, new BillableService { Id = service });
+        public ClientCodeRates GetClientCodeBillableRate(int room, int code) {
+            return IFinanceService.GetRoomsBillableRate(new Room { Id = room}, new ClientCode { Id = code });
         }
 
         [HttpPost]
@@ -116,7 +116,7 @@ namespace AfyaHMIS.Controllers
             patient.Person.Address.AddedBy = user;
             patient.AddedBy = user;
             patient.PI.AddedBy = user;
-            patient.Save(IPatientService);
+            patient.Save();
 
             Encounter encounter = new Encounter {
                 Type = new EncounterType { Id = Constants.ENCOUNTER_REGISTRATION },
@@ -132,6 +132,21 @@ namespace AfyaHMIS.Controllers
         public IActionResult RegisterVisit()
         {
             Users user = new Users { Id = Int64.Parse(HttpContext.User.FindFirst(ClaimTypes.Actor).Value) };
+            Patient patient = VisitModel.Visit.Patient;
+            patient.Status = new PatientStatus
+            {
+                Id = Constants.STATUS_ACTIVE
+            };
+            patient.UpdateStatus();
+
+            Encounter encounter = new Encounter
+            {
+                Type = new EncounterType { Id = Constants.ENCOUNTER_VISIT },
+                Patient = patient,
+                CreatedBy = user
+            };
+            encounter.Create(IPatientService);
+
             Visit visit = VisitModel.Visit;
             visit.Type = new VisitType { Id = Constants.VISIT_FACILITY };
             visit.CreatedBy = user;
@@ -162,6 +177,18 @@ namespace AfyaHMIS.Controllers
             bill.Visit = visit;
             bill.CreatedBy = user;
             bill.Save();
+
+            if (VisitModel.Waiver)
+            {
+                bill.Waiver = bill.Amount;
+                bill.WaiverReason = VisitModel.WaiverReason;
+                bill.WaivedBy = user;
+                bill.UpdateWaiver();
+
+                bill.Flag = new BillsFlag { Id = 1 };
+                bill.ProcessedBy = user;
+                bill.UpdateProcess();
+            }
 
             BillsItem item = VisitModel.Item;
             item.Bill = bill;

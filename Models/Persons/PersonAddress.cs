@@ -5,6 +5,8 @@ namespace AfyaHMIS.Models.Persons
 {
     public class PersonAddress
     {
+        private static readonly IPatientService IService = new PatientService();
+
         public long Id { get; set; }
         public bool Default { get; set; }
         public Person Person { get; set; }
@@ -26,7 +28,7 @@ namespace AfyaHMIS.Models.Persons
             Notes = "";
         }
 
-        public PersonAddress Save(IPatientService IService) {
+        public PersonAddress Save() {
             return IService.SavePersonAddress(this);
         }
     }

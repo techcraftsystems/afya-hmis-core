@@ -13,17 +13,11 @@
         GetRoomsIEnumerable();
     });
 
-    jq('#Queue_Room_Type_Id, #Queue_Room_Id, #Visit_ClientCode_Id').change(function(){
+    jq('#Queue_Room_Id, #Visit_ClientCode_Id').change(function(){
         var clnt_code = jq('#Visit_ClientCode_Id').val();
-        var room_type = jq('#Queue_Room_Type_Id').val();
         var room_idnt = jq('#Queue_Room_Id').val();
 
-        if (room_type <= 2){
-            GetClientCodeBillableRate(clnt_code, 1, room_type);
-        }
-        else {
-            //With specialization
-        }
+        GetClientCodeBillableRate(room_idnt, clnt_code);
     });
 
     jq(".select2").select2({
@@ -93,17 +87,18 @@ function GetRoomsIEnumerable() {
         },
         complete: function() {
             types.formSelect();
+            jq('#Visit_ClientCode_Id').change();
         }
     }); 
 }
 
-function GetClientCodeBillableRate(code, service) {
+function GetClientCodeBillableRate(room, code) {
     jq.ajax({
         dataType: "json",
         url: '/Registration/GetClientCodeBillableRate',
         data: {
-            "code": code,
-            "service": service
+            "room": room,
+            "code": code
         },
         success: function(results) {
             jq('#Bill_Amount').val(results.amount.toString().toAccounting());

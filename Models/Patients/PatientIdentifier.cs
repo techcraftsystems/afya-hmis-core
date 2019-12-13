@@ -4,6 +4,8 @@ using AfyaHMIS.Service;
 namespace AfyaHMIS.Models.Patients
 {
     public class PatientIdentifier {
+        private static readonly IPatientService IService = new PatientService();
+
         public long Id { get; set; }
         public bool Default { get; set; }
         public Patient Patient { get; set; }
@@ -23,7 +25,7 @@ namespace AfyaHMIS.Models.Patients
             Notes = "";
         }
 
-        public PatientIdentifier Save(IPatientService IService) {
+        public PatientIdentifier Save() {
             return IService.SavePatientIdentifier(this);
         }
     }

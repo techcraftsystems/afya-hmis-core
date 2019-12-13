@@ -21,6 +21,7 @@ namespace AfyaHMIS.Service
         public Person SavePerson(Person person);
         public PersonAddress SavePersonAddress(PersonAddress address);
         public Patient SavePatient(Patient patient);
+        public Patient UpdatePatientStatus(Patient patient);
         public PatientIdentifier SavePatientIdentifier(PatientIdentifier identifier);
         public Encounter CreateEncounter(Encounter Encounter);
         public Visit SaveVisit(Visit visit);
@@ -121,7 +122,7 @@ namespace AfyaHMIS.Service
                         Notes = dr[3].ToString(),
                         AddedBy = new Users { Id = Convert.ToInt64(dr[4]) },
                         AddedOn = Convert.ToDateTime(dr[5]),
-                        LastVisit = Convert.ToDateTime(dr[6]).ToString("dd/MM/yyyy"),
+                        LastDate = Convert.ToDateTime(dr[6]),
                         Status = new PatientStatus {
                             Id = Convert.ToInt64(dr[7]),
                             Name = dr[8].ToString()
@@ -159,6 +160,7 @@ namespace AfyaHMIS.Service
                     };
 
                     patient.GetAge();
+                    patient.LastVisit = GetLastSeenAsTimeSpan(patient.LastDate);
                     search.Add(patient);
                 }
             }
@@ -192,6 +194,29 @@ namespace AfyaHMIS.Service
             return prefix + "0000001";
         }
 
+        private string GetLastSeenAsTimeSpan(DateTime date)
+        {
+            TimeSpan span = DateTime.Now - date;
+            if (span.TotalMinutes <= 60)
+                return Convert.ToInt64(span.TotalMinutes) + (span.TotalMinutes.Equals(1) ? " min ago" : " mins ago");
+            if (span.TotalHours <= 24)
+                return Convert.ToInt64(span.TotalHours) + (span.TotalHours.Equals(1) ? " hr ago" : " hrs ago");
+            if (span.TotalHours <= 48)
+                return "Yesterday";
+            if (span.TotalDays < 31)
+                return Convert.ToInt64(span.TotalDays) + (span.TotalDays.Equals(1) ? " day ago" : " days ago");
+
+            int mnth = (DateTime.Now.Month - date.Month) + 12 * (DateTime.Now.Year - date.Year);
+            if (mnth <= 12)
+                return mnth + (mnth.Equals(1) ? " mnth ago" : " mnths ago");
+
+            int year = (new DateTime(1,1,1) + span).Year - 1;
+            if (year <= 5)
+                return year + (year.Equals(1) ? " yr ago" : " yrs ago");
+
+            return date.ToString("dd/MM/yyyy");
+        }
+
         /* Section
          * For
          * Data
@@ -215,6 +240,14 @@ namespace AfyaHMIS.Service
         public Patient SavePatient(Patient patient) {
             SqlServerConnection conn = new SqlServerConnection();
             patient.Id = conn.SqlServerUpdate("DECLARE @idnt INT=" + patient.Id + ", @identifier NVARCHAR(50)='" + GetPatientIdentifier(patient) + "', @person INT=" + patient.Person.Id + ", @status INT=" + patient.Status.Id + ", @user INT=" + patient.AddedBy.Id + ", @notes NVARCHAR(MAX)='" + patient.Notes + "'; IF NOT EXISTS (SELECT pt_idnt FROM Patient WHERE pt_idnt=@idnt) BEGIN INSERT INTO Patient(pt_identifier, pt_person, pt_status, pt_added_by, pt_notes) output INSERTED.pt_idnt VALUES (@identifier, @person, @status, @user, @notes) END ELSE BEGIN UPDATE Patient SET pt_status=@status, pt_notes=@notes output INSERTED.pt_idnt WHERE pt_idnt=@idnt END");
+
+            return patient;
+        }
+
+        public Patient UpdatePatientStatus(Patient patient)
+        {
+            SqlServerConnection conn = new SqlServerConnection();
+            conn.SqlServerUpdate("DECLARE @idnt INT=" + patient.Id + ", @status INT=" + patient.Status.Id + "; UPDATE Patient SET pt_status=@status WHERE pt_idnt=@idnt");
 
             return patient;
         }

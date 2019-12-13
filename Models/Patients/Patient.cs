@@ -6,6 +6,8 @@ namespace AfyaHMIS.Models.Patients
 {
     public class Patient
     {
+        private static readonly IPatientService IService = new PatientService();
+
         public long Id { get; set; }
         public string Uuid { get; set; }
         public string Identifier { get; set; }
@@ -16,7 +18,8 @@ namespace AfyaHMIS.Models.Patients
         public Users AddedBy { get; set; }
         public DateTime AddedOn { get; set; }
         public string Notes { get; set; }
-        public string LastVisit { get; set; } 
+        public DateTime LastDate { get; set; } 
+        public string LastVisit { get; set; }
 
         public Patient() {
             Id = 0;
@@ -30,6 +33,7 @@ namespace AfyaHMIS.Models.Patients
             AddedOn = DateTime.Now;
             Notes = "";
             LastVisit = "";
+            LastDate = DateTime.Now;
         }
 
         public string GetAge() {
@@ -47,14 +51,18 @@ namespace AfyaHMIS.Models.Patients
             return Uuid;
         }
 
-        public Patient Save(IPatientService IService) {
-            Person.Save(IService);
+        public Patient Save() {
+            Person.Save();
             IService.SavePatient(this);
 
             PI.Patient = this;
-            PI.Save(IService);
+            PI.Save();
             
             return this;
+        }
+
+        public Patient UpdateStatus() {
+            return IService.UpdatePatientStatus(this);
         }
     }
 }

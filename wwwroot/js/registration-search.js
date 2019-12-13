@@ -39,6 +39,12 @@
         SearchPatients();
     });
 
+    jq('form input').on('keypress',function(e) {
+        if(e.which == 13) {
+            jq('a.btn-search').click();
+        }
+    });
+
     jq('div.users-list-table').hide();
 });
 

@@ -6,6 +6,8 @@ namespace AfyaHMIS.Models.Finances
 {
     public class Bills
     {
+        public static IFinanceService IFinanceService = new FinanceService();
+
         public long Id { get; set; }
         public Visit Visit { get; set; }
         public BillsFlag Flag { get; set; }
@@ -45,15 +47,15 @@ namespace AfyaHMIS.Models.Finances
         }
 
         public Bills Save() {
-            return new FinanceService().SaveBill(this);
+            return IFinanceService.SaveBill(this);
         }
 
-        public void UpdateWaiver()
-        {
+        public Bills UpdateWaiver() {
+            return IFinanceService.UpdateBillWaiver(this);
         }
 
-        public void UpdateProcess()
-        {
+        public Bills UpdateProcess() {
+            return IFinanceService.UpdateBillProcess(this);
         }
     }
 }

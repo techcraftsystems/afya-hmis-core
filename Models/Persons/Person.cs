@@ -5,6 +5,8 @@ namespace AfyaHMIS.Models.Persons
 {
     public class Person
     {
+        private static readonly IPatientService IService = new PatientService();
+
         public long Id { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
@@ -50,11 +52,11 @@ namespace AfyaHMIS.Models.Persons
             return age;
         }
 
-        public Person Save(IPatientService IService) {
+        public Person Save() {
             IService.SavePerson(this);
 
             Address.Person = this;
-            Address.Save(IService);
+            Address.Save();
             return this;
         }
     }
