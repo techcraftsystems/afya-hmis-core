@@ -17,6 +17,22 @@
         });
     };
 
+    jq('#users-list-datatable').on('click', 'a', function(){
+        var status = jq(this).data('status');
+        var uuid = jq(this).data('uuid');
+
+        if (status == 2){
+            M.toast({html: '<span>You can not create a visit for an admitted patient</span><a class="btn-flat red-text" href="#!">Close<a>'});
+            return false;
+        }
+        if (status == 99){
+            M.toast({html: '<span>You can not create a visit for a dead patient</span><a class="btn-flat red-text" href="#!">Close<a>'});
+            return false;
+        }
+
+        window.location.href = "/registration/visit?p=" + uuid;
+    });
+
     jq('a.btn-floating.btn-large').click(function(){
         var redirect = "?name=" + jq('#patient-names').val().trim();
         if (jq('#patient-identification').val().trim() != ''){
@@ -69,7 +85,7 @@ function SearchPatients() {
             jq.each(results, function(i, pt) {
                 var lastVisit = (pt.lastVisit == "01/01/1900" ? "Never" : pt.lastVisit);
                 var iStatus = "";
-                var iIcons = '&nbsp; <a href="/registration/edit?=' + pt.uuid + '"><i class="material-icons">edit</i></a><a href="/registration/visit?p=' + pt.uuid + '"> <i class="material-icons">add_to_queue</i></a>';
+                var iIcons = '&nbsp; <a href="/registration/edit?p=' + pt.uuid + '"><i class="material-icons">edit</i></a><a class="pointer redirect-link" data-uuid="' + pt.uuid + '" data-status="' + pt.status.id + '"> <i class="material-icons">add_to_queue</i></a>';
 
                 if (pt.status.id == 0){
                     iStatus = '<span class="chip amber lighten-5"><span class="amber-text">' + pt.status.name + '</span> </span>';
