@@ -108,7 +108,7 @@ function SearchPatients() {
 
                 tbl.row.add( [
                     pt.identifier,
-                    "<a class='blue-text' href='/patients/" + pt.uuid + "'>" + pt.person.name + "</a>",
+                    "<a class='blue-text' href='/registration/patient?p=" + pt.uuid + "'>" + pt.person.name + "</a>",
                     pt.age,
                     (pt.person.gender == "m" ? "Male" : "Female"),
                     pt.person.address.telephone,

@@ -72,6 +72,14 @@ namespace AfyaHMIS.Controllers
             return View(model);
         }
 
+        //created a member for patiet view details
+        [Route("/registration/patient")]
+        public IActionResult Patient(string p, RegistrationVisitViewModel model) {
+            model.Visit.Patient = IPatientService.GetPatient(p);
+
+            return View(model);
+        }
+
         [Route("/registration/visit/")]
         public IActionResult Visit(string p, RegistrationVisitViewModel model) {
             model.Visit.Patient = IPatientService.GetPatient(p);
